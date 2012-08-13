@@ -44,8 +44,9 @@ function indent(spaces, text) {
     return text.replace(/^/gm, spaces);
 }
 
-// The total number of broken code snippets.
+// Counters for successes and failures
 var totalFailures = 0;
+var totalSuccesses = 0;
 
 // Loop over each of the file names in the specified directory.
 FILES.forEach(function (file) {
@@ -96,6 +97,7 @@ FILES.forEach(function (file) {
                 }
             } else {
                 console.log("  - Example #%d: OK", idx + 1);
+                totalSuccesses++;
             }
 
         });
@@ -119,7 +121,8 @@ FILES.forEach(function (file) {
 
 // Display the total number of JSHint errors/warnings.
 console.log("");
-console.log("TOTAL FAILURES: %d", totalFailures);
+console.log("TOTAL SUCCESSES: %d", totalSuccesses);
+console.log("TOTAL FAILURES:  %d", totalFailures);
 console.log(new Date());
 
 
