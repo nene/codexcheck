@@ -16,8 +16,8 @@ if (process.argv.length === 3) {
 
 // Get a list [array] all the files in the specified directory.
 fs.readdir(ROOT_DIR, function (err, files) {
-    // Should we output a "success" message if JSHint succeeds?
-    var SUPPRESS_SUCCESS = true;
+    // Should we also write out the exact warnings and source
+    var VERBOSE = false;
 
     // The total number of errors in the files.
     var totalMatches = 0;
@@ -52,7 +52,7 @@ fs.readdir(ROOT_DIR, function (err, files) {
         var re = new RegExp("<pre><code>(.)*?</code></pre>", "ig"),
             mat = jsonContent.html.match(re);
 
-        console.log(file, "-------");
+        console.log(file + ":");
         // If we have any RegExp matches...
         if (mat) {
             // Loop over each <pre><code>...</code></pre> code block...
@@ -64,31 +64,28 @@ fs.readdir(ROOT_DIR, function (err, files) {
                 // Note: It may not even be JavaScript at all, who knows. Exciting!
                 if (!jshint(str)) {
                     // If we have errors, display the example number (1-based), just for giggles.
-                    console.log("==== File %s; Example #%d ====", file, idx + 1);
+                    console.log("  - Example #%d: FAIL :(", idx + 1);
                     // Increment the global error/warning count.
                     totalMatches += jshint.errors.length;
-                    // Loop over each error and display the line number and JSHint warning message.
-                    jshint.errors.forEach(function (error) {
-                        if (error) {
-                            console.log("line: " + error.line + ", reason:" + error.reason);
-                        }
-                    });
-                    console.log("------------\n%s", str, "\n");
-                } else {
-                    // Display a JSHint success message, if global flag is set.
-                    if (!SUPPRESS_SUCCESS) {
-                        console.log("==== File %s; Example #%d ====", file, idx + 1);
-                        console.log("jshint kosher!\n");
+                    if (VERBOSE) {
+                        // Loop over each error and display the line number and JSHint warning message.
+                        jshint.errors.forEach(function (error) {
+                            if (error) {
+                                console.log("    line: " + error.line + ", reason:" + error.reason);
+                            }
+                        });
+                        console.log("------------");
+                        console.log(str);
+                        console.log("------------");
                     }
+                } else {
+                    console.log("  - Example #%d: OK", idx + 1);
                 }
 
             });
         } else {
-            console.log("No [inline] examples found, congrats!");
+            console.log("    No [inline] examples found, congrats!");
         }
-
-        console.log("\n\n\n\n");
-
 
         /*
         // Alias finder.
