@@ -6,19 +6,27 @@ var fs = require("fs"),
 var sanitizer = require("sanitizer"),
     jshint = require("jshint").JSHINT;
 
-// Input directory must be passed from command line as the first argument
-if (process.argv.length === 3) {
-    var ROOT_DIR = process.argv[2];
-} else {
+var ROOT_DIR = undefined;
+var VERBOSE = false;
+
+// process command line arguments
+process.argv.splice(2).forEach(function(opt) {
+    if (opt === "-v" || opt === "--verbose") {
+        // Write out the exact warnings and source
+        VERBOSE = true;
+    } else {
+        ROOT_DIR = opt;
+    }
+});
+
+// Input directory must be passed from command line
+if (!ROOT_DIR) {
     console.log("Please specify an input directory.");
     process.exit(1);
 }
 
 // Get a list [array] all the files in the specified directory.
 fs.readdir(ROOT_DIR, function (err, files) {
-    // Should we also write out the exact warnings and source
-    var VERBOSE = false;
-
     // The total number of errors in the files.
     var totalMatches = 0;
 
