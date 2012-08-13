@@ -82,9 +82,9 @@ fs.readdir(ROOT_DIR, function (err, files) {
                                 console.log("    line: " + error.line + ", reason:" + error.reason);
                             }
                         });
-                        console.log("------------");
-                        console.log(str);
-                        console.log("------------");
+                        console.log("    ------------");
+                        console.log(indent("    ", str));
+                        console.log("    ------------");
                     }
                 } else {
                     console.log("  - Example #%d: OK", idx + 1);
@@ -118,3 +118,8 @@ function stripHtml(value) {
     value = value.replace(/<(?:.|\n)*?>/gm, "");
     return sanitizer.unescapeEntities(value);
 }
+
+function indent(spaces, text) {
+    return text.replace(/^/gm, spaces);
+}
+
