@@ -6,7 +6,13 @@ var fs = require("fs"),
 var sanitizer = require("sanitizer"),
     jshint = require("jshint").JSHINT;
 
-var ROOT_DIR = "/Users/peterdehaan/Sites/docfix/output";
+// Input directory must be passed from command line as the first argument
+if (process.argv.length === 3) {
+    var ROOT_DIR = process.argv[2];
+} else {
+    console.log("Please specify an input directory.");
+    process.exit(1);
+}
 
 // Get a list [array] all the files in the specified directory.
 fs.readdir(ROOT_DIR, function (err, files) {
