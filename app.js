@@ -10,8 +10,6 @@ var ROOT_DIR = "/Users/peterdehaan/Sites/docfix/output";
 
 // Get a list [array] all the files in the specified directory.
 fs.readdir(ROOT_DIR, function (err, files) {
-    "use strict";
-
     // Should we output a "success" message if JSHint succeeds?
     var SUPPRESS_SUCCESS = true;
 
@@ -47,7 +45,7 @@ fs.readdir(ROOT_DIR, function (err, files) {
         // Create a non-greedy regular expression to strip out any <pre> blocks.
         var re = new RegExp("<pre><code>(.)*?</code></pre>", "ig"),
             mat = jsonContent.html.match(re);
-        
+
         console.log(file, "-------");
         // If we have any RegExp matches...
         if (mat) {
