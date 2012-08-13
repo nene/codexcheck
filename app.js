@@ -27,8 +27,8 @@ if (!ROOT_DIR) {
 
 // Get a list [array] all the files in the specified directory.
 fs.readdir(ROOT_DIR, function (err, files) {
-    // The total number of errors in the files.
-    var totalMatches = 0;
+    // The total number of broken code snippets.
+    var totalFailures = 0;
 
     if (err) {
         throw err;
@@ -73,8 +73,8 @@ fs.readdir(ROOT_DIR, function (err, files) {
                 if (!jshint(str)) {
                     // If we have errors, display the example number (1-based), just for giggles.
                     console.log("  - Example #%d: FAIL :(", idx + 1);
-                    // Increment the global error/warning count.
-                    totalMatches += jshint.errors.length;
+                    // Increment the global failures count.
+                    totalFailures++;
                     if (VERBOSE) {
                         // Loop over each error and display the line number and JSHint warning message.
                         jshint.errors.forEach(function (error) {
@@ -110,7 +110,8 @@ fs.readdir(ROOT_DIR, function (err, files) {
     });
 
     // Display the total number of JSHint errors/warnings.
-    console.log("TOTAL MATCHES: %d", totalMatches);
+    console.log("");
+    console.log("TOTAL FAILURES: %d", totalFailures);
     console.log(new Date());
 });
 
