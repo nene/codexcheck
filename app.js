@@ -123,7 +123,6 @@ FILES.forEach(function (file) {
 
 });
 
-// Display the total number of JSHint errors/warnings.
 console.log("");
 console.log("TOTAL SUCCESSES: %d", totalSuccesses);
 console.log("TOTAL FAILURES:  %d", totalFailures);
