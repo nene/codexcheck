@@ -1,0 +1,11 @@
+{
+  "name": "codexcheck",
+  "version": "0.0.0",
+  "description": "Code examples checker for Sencha docs",
+  "author": "Peter deHaan <peter.dehaan@extjs.com>",
+  "dependencies": {
+    "express": "git://github.com/visionmedia/express.git",
+    "sanitizer": "",
+    "jshint": ""
+  }
+}
