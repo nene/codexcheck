@@ -97,18 +97,6 @@ FILES.forEach(function (file) {
 
     });
 
-    /*
-    // Alias finder.
-    try {
-        if (jsonContent.aliases.hasOwnProperty("widget")) {
-            console.log("---", file, "---");
-            console.log(jsonContent.aliases.widget.join("\n"));
-            console.log("");
-        }
-    } catch (err) {
-        // console.log("no aliases");
-    }
-    */
 });
 
 // Display the total number of JSHint errors/warnings.
