@@ -60,17 +60,22 @@ FILES.forEach(function (file) {
     // Read the JSON from file
     var json = JSON.parse(fs.readFileSync(file, "utf-8"));
 
-    // check the documentation of a class itself
+    // extract snippets from the documentation of a class itself
     var snips = extractSnippets(json.doc);
 
+    // extract from all class members
     ["members", "statics"].forEach(function(group) {
         for (var i in json[group]) {
             json[group][i].forEach(function(m) {
-                snips = snips.concat(extractSnippets(m.doc));
+                // skip inherited members
+                if (m.owner !== json.name) {
+                    snips = snips.concat(extractSnippets(m.doc));
+                }
             });
         }
     });
 
+    // loop through all extracted snippets
     snips.forEach(function(code, idx) {
         // Lets JSHint the contents and see if it is valid JavaScript.
         // Note: It may not even be JavaScript at all, who knows. Exciting!
