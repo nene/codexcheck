@@ -49,6 +49,25 @@ function extractSnippets(html) {
     return (html.match(/<pre><code>([^]*?)<\/code><\/pre>/ig) || []).map(stripHtml);
 }
 
+function highlightErrors(code, errors) {
+    // create map of lines with errors
+    var errMap = {};
+    errors.forEach(function(e) {
+        if (e) {
+            errMap[e.line-1] = true;
+        }
+    });
+
+    return code.split(/\n/).map(function(line, i) {
+        if (errMap[i]) {
+            return ">>> " + line;
+        }
+        else {
+            return "    " + line;
+        }
+    }).join("\n");
+}
+
 // Counters for successes and failures
 var totalFailures = 0;
 var totalSuccesses = 0;
@@ -92,7 +111,7 @@ FILES.forEach(function (file) {
                     }
                 });
                 console.log("    ------------");
-                console.log(indent("    ", code));
+                console.log(indent("    ", highlightErrors(code, jshint.errors)));
                 console.log("    ------------");
             }
         } else {
