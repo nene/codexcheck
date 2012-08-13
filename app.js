@@ -87,7 +87,7 @@ FILES.forEach(function (file) {
         for (var i in json[group]) {
             json[group][i].forEach(function(m) {
                 // skip inherited members
-                if (m.owner !== json.name) {
+                if (m.owner === json.name) {
                     snips = snips.concat(extractSnippets(m.doc));
                 }
             });
