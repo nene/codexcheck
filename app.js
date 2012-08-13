@@ -44,10 +44,9 @@ function indent(spaces, text) {
     return text.replace(/^/gm, spaces);
 }
 
+// Extracts all <pre> blocks
 function extractSnippets(html) {
-    // Create a non-greedy regular expression to strip out any <pre> blocks.
-    var re = new RegExp("<pre><code>(.)*?</code></pre>", "ig");
-    return html.match(re) || [];
+    return (html.match(/<pre><code>([^]*?)<\/code><\/pre>/ig) || []).map(stripHtml);
 }
 
 // Counters for successes and failures
@@ -62,16 +61,20 @@ FILES.forEach(function (file) {
     var json = JSON.parse(fs.readFileSync(file, "utf-8"));
 
     // check the documentation of a class itself
-    var mat = extractSnippets(json.doc);
+    var snips = extractSnippets(json.doc);
 
-    // Loop over each <pre><code>...</code></pre> code block...
-    mat.forEach(function (item, idx) {
-        // Strip out any HTML content and convert all our junk characters back to a newline.
-        var str = stripHtml(item.replace(/\007/g, "\n"));
+    ["members", "statics"].forEach(function(group) {
+        for (var i in json[group]) {
+            json[group][i].forEach(function(m) {
+                snips = snips.concat(extractSnippets(m.doc));
+            });
+        }
+    });
 
+    snips.forEach(function(code, idx) {
         // Lets JSHint the contents and see if it is valid JavaScript.
         // Note: It may not even be JavaScript at all, who knows. Exciting!
-        if (!jshint(str)) {
+        if (!jshint(code)) {
             // If we have errors, display the example number (1-based), just for giggles.
             console.log("  - Example #%d: FAIL :(", idx + 1);
             // Increment the global failures count.
@@ -84,7 +87,7 @@ FILES.forEach(function (file) {
                     }
                 });
                 console.log("    ------------");
-                console.log(indent("    ", str));
+                console.log(indent("    ", code));
                 console.log("    ------------");
             }
         } else {
